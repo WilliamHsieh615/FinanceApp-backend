@@ -1,4 +1,4 @@
-# FinFun：方方記帳，讓理財變有趣
+# FinFun：方方面面記帳，讓理財變有趣
 
     USE finance_app;
     
@@ -17,7 +17,7 @@
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         name VARCHAR(100) NOT NULL,                         -- 帳本名稱
-        type VARCHAR(50) NOT NULL,                          -- 帳本類型 (如 收支帳、投資帳、負債帳 等，由後端定義，不使用 ENUM，方便未來擴充)
+        type VARCHAR(50) NOT NULL,                          -- 帳本類型 (如 收支帳、投資帳、負債帳、應收帳款、固定資產帳、庫存帳、自訂帳 等，由後端定義，不使用 ENUM，方便未來擴充)
         note VARCHAR(255),                                  -- 備註
         created_date DATETIME NOT NULL,
         updated_date DATETIME NOT NULL,
@@ -38,8 +38,8 @@
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
 
-    -- 帳戶表 
-    CREATE TABLE accounts (
+    -- 收支帳戶表 
+    CREATE TABLE income_accounts (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         ledger_id BIGINT NOT NULL,
@@ -57,7 +57,7 @@
     );
 
     -- 大分類表
-    CREATE TABLE category_groups (
+    CREATE TABLE income_category_groups (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         ledger_id BIGINT NOT NULL,
@@ -70,7 +70,7 @@
     );
 
     -- 小分類表
-    CREATE TABLE categories (
+    CREATE TABLE income_categories (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         ledger_id BIGINT NOT NULL,
@@ -86,7 +86,7 @@
 
 
     -- 交易商店表 
-    CREATE TABLE merchants (
+    CREATE TABLE income_merchants (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         ledger_id BIGINT NOT NULL,
@@ -98,8 +98,8 @@
         FOREIGN KEY (ledger_id) REFERENCES ledgers(id) ON DELETE CASCADE
     );
 
-    -- 單筆帳目表
-    CREATE TABLE transactions (
+    -- 收支單筆帳目表
+    CREATE TABLE income_transactions (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         ledger_id BIGINT NOT NULL,
@@ -120,8 +120,8 @@
         FOREIGN KEY (merchant_id) REFERENCES merchants(id) ON DELETE SET NULL
     );
 
-    -- 重複單筆帳目表
-    CREATE TABLE recurring_transactions (
+    -- 收支單筆重複帳目表
+    CREATE TABLE income_recurring_transactions (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         ledger_id BIGINT NOT NULL,
@@ -143,6 +143,78 @@
         FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
         FOREIGN KEY (merchant_id) REFERENCES merchants(id) ON DELETE SET NULL
     );
+
+    -- 投資帳戶表 
+    CREATE TABLE investment_accounts (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        user_id BIGINT NOT NULL,
+        ledger_id BIGINT NOT NULL,
+        name VARCHAR(50) NOT NULL,                         -- 帳戶名稱
+        type VARCHAR(50) NOT NULL,                         -- 帳戶類型(如 現金、信用卡、銀行)
+        balance DECIMAL(15,2) DEFAULT 0,                   -- 初始餘額
+        currency CHAR(3) DEFAULT 'TWD',                    -- 幣別
+        note VARCHAR(255),                                 -- 備註
+        cycle_day TINYINT NULL,                            -- 結帳日 (1~31，僅使用信用卡時顯示此欄位)
+        due_day TINYINT NULL,                              -- 付款日 (1~31，僅使用信用卡時顯示此欄位)
+        created_date DATETIME NOT NULL,		               -- 建立時間 (由後端寫入)
+        updated_date DATETIME NOT NULL,		               -- 更新時間 (由後端寫入)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (ledger_id) REFERENCES ledgers(id) ON DELETE CASCADE
+    );
+
+    -- 投資單筆帳目表
+    CREATE TABLE investment_transactions (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        user_id BIGINT NOT NULL,
+        ledger_id BIGINT NOT NULL,
+        account_id BIGINT NOT NULL,
+        asset_type VARCHAR(50) NOT NULL,                    -- 投資商品總類 (股票、基金、債券、外幣、虛擬貨幣、貴金屬、定存、保險、其他，不使用 ENUM，方便未來擴充)
+        asset_code VARCHAR(100) NOT NULL,                   -- 投資商品代號或名稱 (2330 / AAPL / USDJPY)
+        投資的市場(如 台股 美股 日股 A股 歐股 等等)
+        action             -- 投資活動 (買、賣、配息或配股，不使用 ENUM，方便未來擴充)
+        quantity
+        
+        price DECIMAL(15,2) NOT NULL,
+        fee DECIMAL(15,2) NOT NULL DEFAULT 0,               -- 手續費
+        transaction_date DATETIME NOT NULL,                 -- 交易日
+        created_date DATETIME NOT NULL,		                -- 建立時間 (由後端寫入)
+        updated_date DATETIME NOT NULL,		                -- 更新時間 (由後端寫入)
+    );
+
+    
+
+
+    -- 投資單筆重複帳目表
+    CREATE TABLE investment_recurring_transactions (
+
+    );
+
+    -- 負債單筆帳目表
+    CREATE TABLE debt_transactions (
+
+    );
+    
+    -- 負債單筆重複帳目表
+    CREATE TABLE debt_recurring_transactions (
+
+    );
+
+    -- 固定資產單筆帳目表
+
+    -- 固定資產單筆重複帳目表(少用)
+
+    -- 應收帳款單筆帳目表
+
+    -- 應收帳款單筆重複帳目表
+
+    -- 存貨單筆帳目表
+
+    -- 存貨單筆重複帳目表
+
+    -- 自訂單筆帳目表
+
+    -- 自訂單筆重複帳目表
+    
 
     CREATE INDEX idx_transactions_user_date ON transactions(user_id, transaction_date);
     CREATE INDEX idx_transactions_ledger_date ON transactions(ledger_id, transaction_date);
