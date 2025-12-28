@@ -17,7 +17,7 @@
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         name VARCHAR(100) NOT NULL,                         -- 帳本名稱
-        type VARCHAR(50) NOT NULL,                          -- 帳本類型 (如 收支帳、投資帳、負債帳、應收帳款、固定資產帳、庫存帳、自訂帳 等，由後端定義，不使用 ENUM，方便未來擴充)
+        type VARCHAR(50) NOT NULL,                          -- 帳本類型 (如 收支帳、投資帳、負債帳、應收帳款、固定資產帳、庫存帳、自訂帳，由後端定義，不使用 ENUM，方便未來擴充)
         note VARCHAR(255),                                  -- 備註
         created_date DATETIME NOT NULL,
         updated_date DATETIME NOT NULL,
@@ -38,22 +38,107 @@
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
 
-    -- 收支帳戶表 
-    CREATE TABLE income_accounts (
+    -- 帳戶表
+    CREATE TABLE accounts (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         ledger_id BIGINT NOT NULL,
         name VARCHAR(50) NOT NULL,                         -- 帳戶名稱
-        type VARCHAR(50) NOT NULL,                         -- 帳戶類型(如 現金、信用卡、銀行)
+        type VARCHAR(50) NOT NULL,                         -- 帳戶性質（如：
+                                                              收支帳下的現金、信用卡、銀行，
+                                                              投資帳下的股票、基金、債券、外幣、虛擬貨幣、貴金屬、定存、保險，
+                                                              負債帳下的房貸、信貸、車貸，
+                                                              應收帳下的借出款，
+                                                              固定資產帳下的房貸產、汽車、機車、家電、3C
+                                                              存貨帳下的生活用品或是備品
+                                                              由後端定義，不使用 ENUM，方便未來擴充）
         balance DECIMAL(15,2) DEFAULT 0,                   -- 初始餘額
-        currency CHAR(3) DEFAULT 'TWD',                    -- 幣別
+        currency CHAR(3) DEFAULT 'TWD',                    -- 幣別 (應獨立成一個資料表)
         note VARCHAR(255),                                 -- 備註
-        cycle_day TINYINT NULL,                            -- 結帳日 (1~31，僅使用信用卡時顯示此欄位)
-        due_day TINYINT NULL,                              -- 付款日 (1~31，僅使用信用卡時顯示此欄位)
         created_date DATETIME NOT NULL,		               -- 建立時間 (由後端寫入)
         updated_date DATETIME NOT NULL,		               -- 更新時間 (由後端寫入)
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (ledger_id) REFERENCES ledgers(id) ON DELETE CASCADE
+    );
+
+    -- 帳戶表子表 (收支帳 → 信用卡)
+    CREATE TABLE credit_card_accounts (
+        account_id BIGINT PRIMARY KEY,
+        cycle_day TINYINT NOT NULL,                        -- 結帳日 (1~31)
+        due_day TINYINT NOT NULL,                          -- 繳款日 (1~31)
+        credit_limit DECIMAL(15,2),                        -- 信用額度
+        annual_fee DECIMAL(15,2),                          -- 年費                   
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    );
+
+    -- 帳戶表子表 (投資帳 → 股票、基金、債券、外幣、貴金屬）
+    CREATE TABLE investment_accounts (
+        account_id BIGINT PRIMARY KEY,
+        investment_type VARCHAR(50) NOT NULL,              -- stock / fund / bond / forex / crypto / gold
+        broker VARCHAR(100),                               -- 券商 / 平台
+        risk_level TINYINT,                                -- 風險等級（1~5，可選）
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    );
+
+    -- 帳戶表子表 (投資帳 → 定存、保險）
+    CREATE TABLE term_investment_accounts (
+        account_id BIGINT PRIMARY KEY,
+        interest_rate DECIMAL(5,2),                        -- 利率 %
+        start_date DATE NOT NULL,                          -- 開始日
+        end_date DATE NOT NULL,                            -- 到期日
+        payout_type VARCHAR(50)                            -- 配息類型 (到期 / 定期配息)
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    );
+
+    -- 帳戶表子表 (負債帳 → 房貸、車貸、信貸）
+    CREATE TABLE loan_accounts (
+        account_id BIGINT PRIMARY KEY,
+                                                            -- 還款類型 (年繳、月繳、週繳、日繳，不使用 ENUM，方便未來擴充)
+                                                            -- 總期數
+        total_amount DECIMAL(15,2) NOT NULL,               -- 總金額
+        interest_rate DECIMAL(5,2) NOT NULL,               -- 利率 %
+                                                            -- 剩餘期數
+        remaining_amount DECIMAL(15,2)                     -- 剩餘金額
+        interest_rate DECIMAL(5,2) NOT NULL,               -- 利率 %
+        cycle_day TINYINT NOT NULL,                        -- 結帳日 (1~31)
+        due_day TINYINT NOT NULL,                          -- 繳款日 (1~31)
+        start_date DATE NOT NULL,                          -- 開始日
+        end_date DATE NOT NULL,                            -- 到期日
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    );
+
+    -- 帳戶表子表 (應收帳款)
+    CREATE TABLE receivable_accounts (
+        account_id BIGINT PRIMARY KEY,
+        debtor_name VARCHAR(100) NOT NULL,                 -- 借款人 (應獨立成一資料表)
+        total_amount DECIMAL(15,2) NOT NULL,               -- 總金額
+        interest_rate DECIMAL(5,2) NOT NULL,               -- 利率 %
+        cycle_day TINYINT NOT NULL,                        -- 結帳日 (1~31)
+        due_day TINYINT NOT NULL,                          -- 繳款日 (1~31)
+        start_date DATE NOT NULL,                          -- 開始日
+        end_date DATE NOT NULL,                            -- 到期日
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    );
+
+    -- 帳戶表子表 (固定資產帳 → 房屋、車輛、家電、3C)
+    CREATE TABLE fixed_asset_accounts (
+        account_id BIGINT PRIMARY KEY,
+        purchase_date DATE NOT NULL,                       -- 購買日
+        purchase_price DECIMAL(15,2) NOT NULL,             -- 購買價格
+        useful_life_years INT,                             -- 使用年限
+        salvage_value DECIMAL(15,2),                       -- 殘值
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    );
+
+    -- 帳戶表子表 (存貨帳 → 生活用品 / 備品)
+    CREATE TABLE inventory_accounts (
+        account_id BIGINT PRIMARY KEY,
+        unit VARCHAR(20) NOT NULL,                         -- 包 / 瓶 / 個
+        quantity DECIMAL(10,2) DEFAULT 0,                  -- 目前數量
+        warning_level DECIMAL(10,2),                       -- 低於提醒
+        average_cost                                       -- 平均成本
+        expiry_date                                        -- 有效期限
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
     );
 
     -- 大分類表
@@ -142,24 +227,6 @@
         FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
         FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
         FOREIGN KEY (merchant_id) REFERENCES merchants(id) ON DELETE SET NULL
-    );
-
-    -- 投資帳戶表 
-    CREATE TABLE investment_accounts (
-        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        user_id BIGINT NOT NULL,
-        ledger_id BIGINT NOT NULL,
-        name VARCHAR(50) NOT NULL,                         -- 帳戶名稱
-        type VARCHAR(50) NOT NULL,                         -- 帳戶類型(如 現金、信用卡、銀行)
-        balance DECIMAL(15,2) DEFAULT 0,                   -- 初始餘額
-        currency CHAR(3) DEFAULT 'TWD',                    -- 幣別
-        note VARCHAR(255),                                 -- 備註
-        cycle_day TINYINT NULL,                            -- 結帳日 (1~31，僅使用信用卡時顯示此欄位)
-        due_day TINYINT NULL,                              -- 付款日 (1~31，僅使用信用卡時顯示此欄位)
-        created_date DATETIME NOT NULL,		               -- 建立時間 (由後端寫入)
-        updated_date DATETIME NOT NULL,		               -- 更新時間 (由後端寫入)
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-        FOREIGN KEY (ledger_id) REFERENCES ledgers(id) ON DELETE CASCADE
     );
 
     -- 投資單筆帳目表
