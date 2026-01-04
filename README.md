@@ -356,7 +356,7 @@
         location VARCHAR(100),                             -- 位置
         FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
         FOREIGN KEY (asset_category_id) REFERENCES asset_categories(id),
-        FOREIGN KEY (depreciation_method_id) REFERENCES depreciation_methods(id);
+        FOREIGN KEY (depreciation_method_id) REFERENCES depreciation_methods(id)
     );
 
     -- 存貨分類表
