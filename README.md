@@ -29,6 +29,24 @@
         FOREIGN KEY (country_id) REFERENCES countries(id)
     );
 
+    -- 匯率表
+    CREATE TABLE exchange_rates (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+        base_currency_id BIGINT NOT NULL,     -- 基準幣別 (USD)
+        quote_currency_id BIGINT NOT NULL,    -- 報價幣別 (TWD)
+
+        rate DECIMAL(15,8) NOT NULL,           -- 匯率 (1 USD = ? TWD)
+        rate_date DATE NOT NULL,               -- 匯率日期
+
+        created_date DATETIME NOT NULL,
+
+        UNIQUE (base_currency_id, quote_currency_id, rate_date),
+
+        FOREIGN KEY (base_currency_id) REFERENCES currencies(id),
+        FOREIGN KEY (quote_currency_id) REFERENCES currencies(id)
+    );
+
     -- 投資市場表
     CREATE TABLE markets (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -468,7 +486,7 @@
     CREATE TABLE bond_products (
         investment_product_id BIGINT PRIMARY KEY,
 
-        bond_issuer_id BIGINT.                            -- 發行機構
+        bond_issuer_id BIGINT,                            -- 發行機構
         coupon_rate DECIMAL(5,2),                         -- 票面利率
         coupon_frequency_id BIGINT,                       -- 票面配息頻率
         maturity_date DATE NOT NULL,                      -- 到期日
@@ -486,7 +504,7 @@
         investment_product_id BIGINT PRIMARY KEY,
         contract_size DECIMAL(15,2),                      -- 每張合約的標的數量
         expiration_date DATE NOT NULL,                    -- 到期日
-        FOREIGN KEY (investment_product_id) REFERENCES investment_products(id) ON DELETE CASCADE,
+        FOREIGN KEY (investment_product_id) REFERENCES investment_products(id) ON DELETE CASCADE
     );
 
     -- 選擇權類型表
@@ -630,31 +648,6 @@
         FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE,
         FOREIGN KEY (investment_product_id) REFERENCES investment_products(id)
     );
-
-    -- 交易表子表 (負債)
-    CREATE TABLE debt_transaction_details (
-        transaction_id BIGINT PRIMARY KEY,
-        
-        principal DECIMAL(15,2) NOT NULL,                   -- 本金
-        interest DECIMAL(15,2) NOT NULL,                    -- 利息
-        penalty DECIMAL(15,2) DEFAULT 0,                    -- 違約金
-
-        FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE
-    );
-
-    
-    -- 交易表子表 (應收帳款)
-    CREATE TABLE receivable_transaction_details (
-        transaction_id BIGINT PRIMARY KEY,
-        
-        principal DECIMAL(15,2) NOT NULL,                   -- 本金
-        interest DECIMAL(15,2) NOT NULL,                    -- 利息
-        penalty DECIMAL(15,2) DEFAULT 0,                    -- 違約金
-
-        FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE
-    );
-    
-    -- 交易表子表 (固定資產) 目前不需要
     
     -- 交易表子表 (存貨)
     CREATE TABLE inventory_transaction_details (
@@ -714,31 +707,42 @@
         FOREIGN KEY (recurring_transaction_id) REFERENCES recurring_transactions(id) ON DELETE CASCADE,
         FOREIGN KEY (investment_product_id) REFERENCES investment_products(id)
     );
-    
-    -- 重複交易子表 (負債)
-    CREATE TABLE debt_transaction_details (
-        recurring_transaction_id BIGINT PRIMARY KEY,
-        
-        principal DECIMAL(15,2) NOT NULL,                   -- 本金
-        interest DECIMAL(15,2) NOT NULL,                    -- 利息
-        penalty DECIMAL(15,2) DEFAULT 0,                    -- 違約金
 
-        FOREIGN KEY (recurring_transaction_id) REFERENCES recurring_transactions(id) ON DELETE CASCADE,
+    -- 帳戶調整表 (會計用)
+    CREATE TABLE account_adjustments (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+        account_id BIGINT NOT NULL,
+
+        before_balance DECIMAL(15,2) NOT NULL,            -- 調整前餘額
+        after_balance DECIMAL(15,2) NOT NULL,             -- 調整後餘額
+
+        reason VARCHAR(255) NOT NULL,                     -- 調整原因
+        note VARCHAR(255),
+
+        created_date DATETIME NOT NULL,
+
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
     );
 
-    
-    -- 重複交易子表 (應收帳款)
-    CREATE TABLE receivable_transaction_details (
-        recurring_transaction_id BIGINT PRIMARY KEY,
-        
-        principal DECIMAL(15,2) NOT NULL,                   -- 本金
-        interest DECIMAL(15,2) NOT NULL,                    -- 利息
-        penalty DECIMAL(15,2) DEFAULT 0,                    -- 違約金
+    -- 投資持倉快照 (增加效能用)
+    CREATE TABLE investment_positions (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-        FOREIGN KEY (recurring_transaction_id) REFERENCES recurring_transactions(id) ON DELETE CASCADE,
+        account_id BIGINT NOT NULL,
+        investment_product_id BIGINT NOT NULL,
+
+        quantity DECIMAL(20,8) NOT NULL,                  -- 持有數量
+        avg_cost DECIMAL(15,4) NOT NULL,                  -- 平均成本
+        market_value DECIMAL(15,2),                       -- 市值 (快照時計算)
+
+        snapshot_date DATE NOT NULL,                      -- 快照日期
+        created_date DATETIME NOT NULL,
+
+        UNIQUE (account_id, investment_product_id, snapshot_date),
+
+        FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE,
+        FOREIGN KEY (investment_product_id) REFERENCES investment_products(id)
     );
 
-    -- 重複交易子表 (固定資產) 目前不需要
-    
-    -- 重複交易子表 (存貨) 目前不需要
 
