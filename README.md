@@ -332,7 +332,7 @@
         FOREIGN KEY (financial_institution_group_id) REFERENCES financial_institution_groups(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)金融機構識別碼類型表
+    -- (V1)金融機構識別碼類型表
     CREATE TABLE financial_institution_identifier_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 代號 (SWIFT、BANK_CODE、TAX_ID、STOCK_CODE、ROUTING_NUMBER、IBAN_PREFIX、LICENSE_NO)
@@ -344,7 +344,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)金融機構識別碼表
+    -- (V1)金融機構識別碼表
     CREATE TABLE financial_institution_identifiers (
         id                                       BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                               BIGINT         NULL,
