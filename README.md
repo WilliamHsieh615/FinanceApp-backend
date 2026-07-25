@@ -137,7 +137,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)時區表
+    -- (V1)時區表
     CREATE TABLE timezones (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL,                        -- 時區代碼 (UTC、EST、CST)
@@ -151,7 +151,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)國別與時區關聯表
+    -- (V1)國別與時區關聯表
     CREATE TABLE country_timezones (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,
@@ -169,7 +169,7 @@
         FOREIGN KEY (timezone_id) REFERENCES timezones(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)貨幣表
+    -- (V1)貨幣表
     CREATE TABLE currencies (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 貨幣碼 (TWD、USD、JPY...)
@@ -192,7 +192,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)國別與貨幣關聯表
+    -- (V1)國別與貨幣關聯表
     CREATE TABLE currency_countries (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,
@@ -207,7 +207,7 @@
         FOREIGN KEY (currency_id) REFERENCES currencies(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)語言表
+    -- (V1)語言表
     CREATE TABLE languages (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 代號
@@ -218,7 +218,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)國別與語言關聯表
+    -- (V1)國別與語言關聯表
     CREATE TABLE country_languages (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,
@@ -270,7 +270,7 @@
         FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)金融機構大類表
+    -- (V1)金融機構大類表
     CREATE TABLE financial_institution_type_groups (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 代號 (BANK, BROKER, INSURANCE, EXCHANGE, CRYPTO)
@@ -282,7 +282,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)金融機構小類表
+    -- (V1)金融機構小類表
     CREATE TABLE financial_institution_types (
         id                                  BIGINT         AUTO_INCREMENT PRIMARY KEY,
         financial_institution_type_group_id BIGINT         NOT NULL,
@@ -296,7 +296,7 @@
         FOREIGN KEY (financial_institution_type_group_id) REFERENCES financial_institution_type_groups(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)金融機構集團表
+    -- (V1)金融機構集團表
     CREATE TABLE financial_institution_groups (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,                        -- 金融機構集團總部國
@@ -312,7 +312,7 @@
         FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)金融機構表
+    -- (V1)金融機構表
     CREATE TABLE financial_institutions (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,                        -- 金融機構總部國
