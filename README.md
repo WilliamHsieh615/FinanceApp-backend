@@ -479,7 +479,7 @@
         FOREIGN KEY (quote_currency_id) REFERENCES currencies(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
     
-    -- (測試中)使用者表
+    -- (V1)使用者表
     CREATE TABLE users (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NULL,
@@ -505,7 +505,7 @@
         FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)角色表
+    -- (V1)角色表
     CREATE TABLE roles (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- ADMIN, STAFF, USER
@@ -517,7 +517,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)使用者與角色關聯表
+    -- (V1)使用者與角色關聯表
     CREATE TABLE user_roles (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NOT NULL,
@@ -1005,7 +1005,7 @@
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)流向類型表
+    -- (V1)流向類型表
     CREATE TABLE flow_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- REPAYMENT、PAYOUT、RECOVERY、PAYMENT 
