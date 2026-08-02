@@ -494,15 +494,15 @@
         birthday                         DATE           NOT NULL,                        -- 使用者生日
         phone                            VARCHAR(20)    NULL,                            -- 手機號碼
 
-        email_verified                   BOOLEAN        DEFAULT FALSE,                   -- 電子郵件驗證
-        sms_verified                     BOOLEAN        DEFAULT FALSE,                   -- 簡訊驗證
+        email_verified                   BOOLEAN        NOT NULL DEFAULT FALSE,          -- 電子郵件驗證
+        sms_verified                     BOOLEAN        NOT NULL DEFAULT FALSE,          -- 簡訊驗證
         is_active                        BOOLEAN        NOT NULL DEFAULT TRUE,           -- 是否啟用
         created_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         deleted_date                     DATETIME       NULL,                            -- 刪除時間 (由後端寫入)
         FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE SET NULL ON UPDATE CASCADE,
         FOREIGN KEY (timezone_id) REFERENCES timezones(id) ON DELETE SET NULL ON UPDATE CASCADE,
-        FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE CASCADE ON UPDATE CASCADE
+        FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
     -- (V1)角色表
