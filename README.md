@@ -1017,7 +1017,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)頻率表
+    -- (V1)頻率表
     CREATE TABLE frequencies (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL,                        -- 代號
@@ -1029,7 +1029,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)流向頻率表(付款、收款、配息、不配息)
+    -- (V1)流向頻率表(付款、收款、配息、不配息)
     CREATE TABLE flow_frequencies (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         flow_type_id                     BIGINT         NOT NULL,
@@ -1072,7 +1072,7 @@
         FOREIGN KEY (unit_type_id) REFERENCES unit_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)帳本種類表
+    -- (V1)帳本種類表
     CREATE TABLE ledger_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- cashflow、investment、debt、receivable、fixed_asset、inventory
@@ -1086,7 +1086,7 @@
         FOREIGN KEY (icon_id) REFERENCES icons(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)帳本表
+    -- (V1)帳本表
     CREATE TABLE ledgers (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NOT NULL,
@@ -1822,10 +1822,11 @@
     CREATE TABLE fixed_asset_accounts (
         account_id                       BIGINT        PRIMARY KEY,
         asset_category_id                BIGINT        NULL,
-
+        
+        unit_id                          BIGINT        NULL,
         asset_tag                        VARCHAR(50)   UNIQUE,                          -- 識別碼
-        purchase_date                    DATE          NOT NULL,                        -- 購買日
         purchase_price                   DECIMAL(18,8) NOT NULL,                        -- 購買價格
+        purchase_date                    DATE          NOT NULL,                        -- 購買日
         useful_life_years                INT,                                           -- 使用年限
         depreciation_method_id           BIGINT        NULL,
         salvage_value                    DECIMAL(18,8) NULL,                            -- 殘值
@@ -1833,6 +1834,7 @@
         
         FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (asset_category_id) REFERENCES asset_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
+        FOREIGN KEY (unit_id) REFERENCES units(id) ON DELETE RESTRICT ON UPDATE CASCADE
         FOREIGN KEY (depreciation_method_id) REFERENCES depreciation_methods(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
