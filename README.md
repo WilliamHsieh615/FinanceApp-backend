@@ -2065,7 +2065,7 @@
         FOREIGN KEY (icon_id) REFERENCES icons(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)商店類型表
+    -- (V1)商店類型表
     CREATE TABLE merchant_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- restaurant、supermarket、utility
