@@ -479,7 +479,7 @@
         FOREIGN KEY (quote_currency_id) REFERENCES currencies(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
     
-    -- (測試中)使用者表
+    -- (V1)使用者表
     CREATE TABLE users (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NULL,
@@ -505,7 +505,7 @@
         FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)角色表
+    -- (V1)角色表
     CREATE TABLE roles (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- ADMIN, STAFF, USER
@@ -517,7 +517,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)使用者與角色關聯表
+    -- (V1)使用者與角色關聯表
     CREATE TABLE user_roles (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NOT NULL,
@@ -1005,7 +1005,7 @@
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)流向類型表
+    -- (V1)流向類型表
     CREATE TABLE flow_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- REPAYMENT、PAYOUT、RECOVERY、PAYMENT 
@@ -1017,7 +1017,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)頻率表
+    -- (V1)頻率表
     CREATE TABLE frequencies (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL,                        -- 代號
@@ -1029,7 +1029,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)流向頻率表(付款、收款、配息、不配息)
+    -- (V1)流向頻率表(付款、收款、配息、不配息)
     CREATE TABLE flow_frequencies (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         flow_type_id                     BIGINT         NOT NULL,
@@ -1072,7 +1072,7 @@
         FOREIGN KEY (unit_type_id) REFERENCES unit_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)帳本種類表
+    -- (V1)帳本種類表
     CREATE TABLE ledger_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- cashflow、investment、debt、receivable、fixed_asset、inventory
@@ -1086,7 +1086,7 @@
         FOREIGN KEY (icon_id) REFERENCES icons(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)帳本表
+    -- (V1)帳本表
     CREATE TABLE ledgers (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NOT NULL,
@@ -1368,7 +1368,7 @@
         FOREIGN KEY (risk_rating_scale_id) REFERENCES risk_rating_scales(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)帳戶種類表
+    -- (V1)帳戶種類表
     CREATE TABLE account_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         ledger_type_id                   BIGINT         NOT NULL,
@@ -1397,7 +1397,7 @@
         FOREIGN KEY (icon_id) REFERENCES icons(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)帳戶表
+    -- (V1)帳戶表
     CREATE TABLE accounts (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         ledger_id                        BIGINT         NOT NULL,
@@ -1485,7 +1485,7 @@
         FOREIGN KEY (fee_id) REFERENCES fees(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)銀行帳戶類型表
+    -- (V1)銀行帳戶類型表
     CREATE TABLE bank_account_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1497,7 +1497,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)帳戶表子表 (收支帳 → 銀行帳戶)
+    -- (V1)帳戶表子表 (收支帳 → 銀行帳戶)
     CREATE TABLE bank_accounts (
         account_id                       BIGINT        PRIMARY KEY,
         financial_institution_id         BIGINT        NULL,
@@ -1514,7 +1514,7 @@
         FOREIGN KEY (payout_frequency_id) REFERENCES flow_frequencies(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)支付網路類型表
+    -- (V1)支付網路類型表
     CREATE TABLE payment_network_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1526,7 +1526,7 @@
         deleted_date                     DATETIME       NULL
     );
 
-    -- (測試中)支付網路表
+    -- (V1)支付網路表
     CREATE TABLE payment_networks (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NULL,                            -- 母公司所在國（Amex=US, JCB=JP）
@@ -1542,7 +1542,7 @@
         FOREIGN KEY (payment_network_type_id) REFERENCES payment_network_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)卡片等級表
+    -- (V1)卡片等級表
     CREATE TABLE card_tiers (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1554,7 +1554,7 @@
         deleted_date                     DATETIME       NULL
     );
 
-    -- (測試中)支付網路可支援的卡片等級表
+    -- (V1)支付網路可支援的卡片等級表
     CREATE TABLE payment_network_card_tiers (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         payment_network_id               BIGINT         NOT NULL,
@@ -1571,7 +1571,7 @@
         FOREIGN KEY (card_tier_id) REFERENCES card_tiers(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)卡片能力表
+    -- (V1)卡片能力表
     CREATE TABLE card_capabilities (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1610,7 +1610,7 @@
         FOREIGN KEY (card_capability_id) REFERENCES card_capabilities(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)帳戶表子表 (收支帳 → 信用卡)
+    -- (V1)帳戶表子表 (收支帳 → 信用卡)
     CREATE TABLE credit_card_accounts (
         account_id                       BIGINT         PRIMARY KEY,
         financial_institution_id         BIGINT         NULL,
@@ -1646,7 +1646,7 @@
         FOREIGN KEY (card_capability_id) REFERENCES card_capabilities(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)卡片發行類型表
+    -- (V1)卡片發行類型表
     CREATE TABLE card_issuance_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1822,10 +1822,10 @@
     CREATE TABLE fixed_asset_accounts (
         account_id                       BIGINT        PRIMARY KEY,
         asset_category_id                BIGINT        NULL,
-
+        unit_id                          BIGINT        NULL,
         asset_tag                        VARCHAR(50)   UNIQUE,                          -- 識別碼
-        purchase_date                    DATE          NOT NULL,                        -- 購買日
         purchase_price                   DECIMAL(18,8) NOT NULL,                        -- 購買價格
+        purchase_date                    DATE          NOT NULL,                        -- 購買日
         useful_life_years                INT,                                           -- 使用年限
         depreciation_method_id           BIGINT        NULL,
         salvage_value                    DECIMAL(18,8) NULL,                            -- 殘值
@@ -1833,6 +1833,7 @@
         
         FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (asset_category_id) REFERENCES asset_categories(id) ON DELETE SET NULL ON UPDATE CASCADE,
+        FOREIGN KEY (unit_id) REFERENCES units(id) ON DELETE RESTRICT ON UPDATE CASCADE
         FOREIGN KEY (depreciation_method_id) REFERENCES depreciation_methods(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
@@ -1980,7 +1981,7 @@
         FOREIGN KEY (contract_id) REFERENCES contracts(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)交易來源種類表
+    -- (V1)交易來源種類表
     CREATE TABLE transaction_source_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- MANUAL、CONTRACT、IMPORT
@@ -1992,7 +1993,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)交易來源表 (可自動生成交易)
+    -- (V1)交易來源表 (可自動生成交易)
     CREATE TABLE transaction_sources (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         transaction_source_type_id       BIGINT         NOT NULL,
@@ -2008,7 +2009,7 @@
         FOREIGN KEY (source_type_id) REFERENCES entity_types(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)分類類型表
+    -- (V1)分類類型表
     CREATE TABLE category_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- income、expense、transfer
@@ -2020,7 +2021,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
     
-    -- (測試中)大分類表
+    -- (V1)大分類表
     CREATE TABLE category_groups (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NULL,                            -- 使用者名稱 (使用者可以自訂大分類與小分類)
@@ -2045,7 +2046,7 @@
         FOREIGN KEY (icon_id) REFERENCES icons(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)小分類表
+    -- (V1)小分類表
     CREATE TABLE categories (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         category_group_id                BIGINT         NOT NULL,		                -- (對應大分類)
@@ -2064,7 +2065,7 @@
         FOREIGN KEY (icon_id) REFERENCES icons(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (測試中)商店類型表
+    -- (V1)商店類型表
     CREATE TABLE merchant_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- restaurant、supermarket、utility
@@ -2076,7 +2077,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (測試中)交易商店表 
+    -- (V1)交易商店表 
     CREATE TABLE merchants (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NULL,                            -- 國別 (系統預設帶出該國別的商店)
@@ -2096,7 +2097,7 @@
         FOREIGN KEY (merchant_type_id) REFERENCES merchant_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)交易類型表
+    -- (V1)交易類型表
     CREATE TABLE transaction_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         ledger_type_id                   BIGINT         NOT NULL,
@@ -2120,7 +2121,7 @@
         FOREIGN KEY (ledger_type_id) REFERENCES ledger_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)交易狀態表
+    -- (V1)交易狀態表
     CREATE TABLE transaction_statuses (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -2132,7 +2133,7 @@
         deleted_date                     DATETIME       NULL
     );
 
-    -- (測試中)交易表
+    -- (V1)交易表
     CREATE TABLE transactions (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         ledger_id                        BIGINT         NOT NULL,
@@ -2169,7 +2170,7 @@
         FOREIGN KEY (transaction_status_id) REFERENCES transaction_statuses(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)交易關聯表 (不同交易之間的關聯)
+    -- (V1)交易關聯表 (不同交易之間的關聯)
     CREATE TABLE transaction_links (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         transaction_id                   BIGINT         NOT NULL,
@@ -2184,7 +2185,7 @@
         FOREIGN KEY (related_transaction_id) REFERENCES transactions(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)交易表子表 (收支)
+    -- (V1)交易表子表 (收支)
     CREATE TABLE cashflow_transaction_details (
         transaction_id                   BIGINT        PRIMARY KEY,
         category_id                      BIGINT        NOT NULL,
@@ -2202,7 +2203,7 @@
         FOREIGN KEY (transaction_id) REFERENCES transactions(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)重複交易表
+    -- (V1)重複交易表
     CREATE TABLE recurring_transactions (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         ledger_id                        BIGINT         NOT NULL,
@@ -2247,7 +2248,7 @@
         FOREIGN KEY (transaction_status_id) REFERENCES transaction_statuses(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (測試中)重複交易關聯表 (不同交易之間的關聯)
+    -- (V1)重複交易關聯表 (不同交易之間的關聯)
     CREATE TABLE recurring_transaction_links (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         recurring_transaction_id         BIGINT         NOT NULL,
@@ -2262,7 +2263,7 @@
         FOREIGN KEY (related_recurring_transaction_id) REFERENCES recurring_transactions(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- (測試中)重複交易子表 (收支)
+    -- (V1)重複交易子表 (收支)
     CREATE TABLE cashflow_recurring_transaction_details (
         recurring_transaction_id         BIGINT        PRIMARY KEY,
         category_id                      BIGINT        NOT NULL,
