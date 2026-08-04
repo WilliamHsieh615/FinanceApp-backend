@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.williamhsieh.financeapp.entity.account.Account;
-import com.williamhsieh.financeapp.entity.Currency;
+import com.williamhsieh.financeapp.entity.currency.Currency;
 import com.williamhsieh.financeapp.entity.ledger.Ledger;
 
 import jakarta.persistence.Column;

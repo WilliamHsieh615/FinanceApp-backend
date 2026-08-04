@@ -2,8 +2,8 @@ package com.williamhsieh.financeapp.entity.merchant;
 
 import java.time.LocalDateTime;
 
-import com.williamhsieh.financeapp.entity.Country;
-import com.williamhsieh.financeapp.entity.User;
+import com.williamhsieh.financeapp.entity.region.Country;
+import com.williamhsieh.financeapp.entity.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

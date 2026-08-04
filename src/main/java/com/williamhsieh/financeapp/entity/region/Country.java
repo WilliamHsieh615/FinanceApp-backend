@@ -1,4 +1,4 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.region;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,8 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.currency;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,35 +11,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "timezones")
-public class Timezone {
-    
+@Table(name = "currencies")
+public class Currency {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code", nullable = false, length = 50)
-    private String code;
-
     @Column(
-        name = "iana_name",
+        name = "code",
         nullable = false,
         unique = true,
-        length = 100
+        length = 50
     )
-    private String ianaName;
+    private String code;
 
-    @Column(name = "name", length = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "utc_offset", nullable = false)
-    private Integer utcOffset;
+    @Column(name = "symbol", length = 10)
+    private String symbol;
 
-    @Column(name = "has_dst", nullable = false)
-    private Boolean hasDst = false;
+    @Column(name = "decimal_places", precision = 18, scale = 8)
+    private BigDecimal decimalPlaces;
 
-    @Column(name = "note", length = 255)
-    private String note;
+    @Column(name = "is_fiat", nullable = false)
+    private boolean fiat;
+
+    @Column(name = "is_crypto", nullable = false)
+    private boolean crypto;
 
     @Column(
         name = "created_date",
@@ -58,7 +60,7 @@ public class Timezone {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    protected Timezone() {
+    protected Currency() {
     }
 
     public Long getId() {
@@ -73,14 +75,6 @@ public class Timezone {
         this.code = code;
     }
 
-    public String getIanaName() {
-        return ianaName;
-    }
-
-    public void setIanaName(String ianaName) {
-        this.ianaName = ianaName;
-    }
-
     public String getName() {
         return name;
     }
@@ -89,28 +83,36 @@ public class Timezone {
         this.name = name;
     }
 
-    public Integer getUtcOffset() {
-        return utcOffset;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setUtcOffset(Integer utcOffset) {
-        this.utcOffset = utcOffset;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
-    public Boolean getHasDst() {
-        return hasDst;
+    public BigDecimal getDecimalPlaces() {
+            return decimalPlaces;
     }
 
-    public void setHasDst(Boolean hasDst) {
-        this.hasDst = hasDst;
+    public void setDecimalPlaces(BigDecimal decimalPlaces) {
+        this.decimalPlaces = decimalPlaces;
     }
 
-    public String getNote() {
-        return note;
+    public boolean isFiat() {
+        return fiat;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setFiat(boolean fiat) {
+        this.fiat = fiat;
+    }
+
+    public boolean isCrypto() {
+        return crypto;
+    }
+
+    public void setCrypto(boolean crypto) {
+        this.crypto = crypto;
     }
 
     public LocalDateTime getCreatedDate() {

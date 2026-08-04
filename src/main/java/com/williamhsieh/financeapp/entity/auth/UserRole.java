@@ -2,7 +2,7 @@ package com.williamhsieh.financeapp.entity.auth;
 
 import java.time.LocalDateTime;
 
-import com.williamhsieh.financeapp.entity.User;
+import com.williamhsieh.financeapp.entity.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

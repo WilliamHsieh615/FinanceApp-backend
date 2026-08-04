@@ -1,4 +1,4 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.region;
 
 import java.time.LocalDateTime;
 
@@ -15,18 +15,18 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-    name = "currency_countries",
+    name = "country_languages",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_currency_countries_currency_country",
+            name = "uk_country_languages_country_language",
             columnNames = {
-                "currency_id",
-                "country_id"
+                "country_id",
+                "language_id"
             }
         )
     }
 )
-public class CurrencyCountry {
+public class CountryLanguage {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +37,14 @@ public class CurrencyCountry {
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "currency_id", nullable = false)
-    private Currency currency;
+    @JoinColumn(name = "language_id", nullable = false)
+    private Language language;
+
+    @Column(name = "is_official")
+    private Boolean official = false;
+
+    @Column(name = "is_default")
+    private Boolean defaultLanguage = false;
 
     @Column(
         name = "created_date",
@@ -59,7 +65,7 @@ public class CurrencyCountry {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    protected CurrencyCountry() {
+    protected CountryLanguage() {
     }
 
     public Long getId() {
@@ -74,12 +80,28 @@ public class CurrencyCountry {
         this.country = country;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public Language getLanguage() {
+        return language;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public Boolean getOfficial() {
+        return official;
+    }
+
+    public void setOfficial(Boolean official) {
+        this.official = official;
+    }
+
+    public Boolean getDefaultLanguage() {
+        return defaultLanguage;
+    }
+
+    public void setDefaultLanguage(Boolean defaultLanguage) {
+        this.defaultLanguage = defaultLanguage;
     }
 
     public LocalDateTime getCreatedDate() {

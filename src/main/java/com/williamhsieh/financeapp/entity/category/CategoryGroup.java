@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.williamhsieh.financeapp.entity.ledger.LedgerType;
 import com.williamhsieh.financeapp.entity.resource.Icon;
-import com.williamhsieh.financeapp.entity.User;
+import com.williamhsieh.financeapp.entity.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

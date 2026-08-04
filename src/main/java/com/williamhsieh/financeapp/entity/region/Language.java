@@ -1,8 +1,6 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.region;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,8 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "currencies")
-public class Currency {
+@Table(name = "languages")
+public class Language {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,17 +27,8 @@ public class Currency {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "symbol", length = 10)
-    private String symbol;
-
-    @Column(name = "decimal_places", precision = 18, scale = 8)
-    private BigDecimal decimalPlaces;
-
-    @Column(name = "is_fiat", nullable = false)
-    private boolean fiat;
-
-    @Column(name = "is_crypto", nullable = false)
-    private boolean crypto;
+    @Column(name = "is_active", nullable = false)
+    private Boolean active = true;
 
     @Column(
         name = "created_date",
@@ -60,7 +49,7 @@ public class Currency {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    protected Currency() {
+    protected Language() {
     }
 
     public Long getId() {
@@ -83,36 +72,12 @@ public class Currency {
         this.name = name;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public BigDecimal getDecimalPlaces() {
-            return decimalPlaces;
-    }
-
-    public void setDecimalPlaces(BigDecimal decimalPlaces) {
-        this.decimalPlaces = decimalPlaces;
-    }
-
-    public boolean isFiat() {
-        return fiat;
-    }
-
-    public void setFiat(boolean fiat) {
-        this.fiat = fiat;
-    }
-
-    public boolean isCrypto() {
-        return crypto;
-    }
-
-    public void setCrypto(boolean crypto) {
-        this.crypto = crypto;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public LocalDateTime getCreatedDate() {

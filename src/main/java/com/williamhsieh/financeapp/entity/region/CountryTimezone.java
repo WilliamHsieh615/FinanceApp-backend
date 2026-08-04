@@ -1,4 +1,4 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.region;
 
 import java.time.LocalDateTime;
 
@@ -15,18 +15,18 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-    name = "country_languages",
+    name = "country_timezones",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_country_languages_country_language",
+            name = "uk_country_timezones_country_timezone",
             columnNames = {
                 "country_id",
-                "language_id"
+                "timezone_id"
             }
         )
     }
 )
-public class CountryLanguage {
+public class CountryTimezone {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,14 +37,11 @@ public class CountryLanguage {
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "language_id", nullable = false)
-    private Language language;
-
-    @Column(name = "is_official")
-    private Boolean official = false;
+    @JoinColumn(name = "timezone_id", nullable = false)
+    private Timezone timezone;
 
     @Column(name = "is_default")
-    private Boolean defaultLanguage = false;
+    private Boolean defaultTimezone = true;
 
     @Column(
         name = "created_date",
@@ -65,7 +62,7 @@ public class CountryLanguage {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    protected CountryLanguage() {
+    protected CountryTimezone() {
     }
 
     public Long getId() {
@@ -80,28 +77,20 @@ public class CountryLanguage {
         this.country = country;
     }
 
-    public Language getLanguage() {
-        return language;
+    public Timezone getTimezone() {
+        return timezone;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setTimezone(Timezone timezone) {
+        this.timezone = timezone;
     }
 
-    public Boolean getOfficial() {
-        return official;
+    public Boolean getDefaultTimezone() {
+        return defaultTimezone;
     }
 
-    public void setOfficial(Boolean official) {
-        this.official = official;
-    }
-
-    public Boolean getDefaultLanguage() {
-        return defaultLanguage;
-    }
-
-    public void setDefaultLanguage(Boolean defaultLanguage) {
-        this.defaultLanguage = defaultLanguage;
+    public void setDefaultTimezone(Boolean defaultTimezone) {
+        this.defaultTimezone = defaultTimezone;
     }
 
     public LocalDateTime getCreatedDate() {

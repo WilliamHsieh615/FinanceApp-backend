@@ -2,7 +2,7 @@ package com.williamhsieh.financeapp.entity.payment;
 
 import java.time.LocalDateTime;
 
-import com.williamhsieh.financeapp.entity.Country;
+import com.williamhsieh.financeapp.entity.region.Country;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

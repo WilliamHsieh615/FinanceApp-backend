@@ -1,7 +1,11 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.user;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.williamhsieh.financeapp.entity.region.Country;
+import com.williamhsieh.financeapp.entity.region.Language;
+import com.williamhsieh.financeapp.entity.region.Timezone;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

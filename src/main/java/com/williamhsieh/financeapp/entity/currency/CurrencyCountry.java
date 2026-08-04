@@ -1,6 +1,8 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.currency;
 
 import java.time.LocalDateTime;
+
+import com.williamhsieh.financeapp.entity.region.Country;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,18 +17,18 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-    name = "country_timezones",
+    name = "currency_countries",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_country_timezones_country_timezone",
+            name = "uk_currency_countries_currency_country",
             columnNames = {
-                "country_id",
-                "timezone_id"
+                "currency_id",
+                "country_id"
             }
         )
     }
 )
-public class CountryTimezone {
+public class CurrencyCountry {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,11 +39,8 @@ public class CountryTimezone {
     private Country country;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "timezone_id", nullable = false)
-    private Timezone timezone;
-
-    @Column(name = "is_default")
-    private Boolean defaultTimezone = true;
+    @JoinColumn(name = "currency_id", nullable = false)
+    private Currency currency;
 
     @Column(
         name = "created_date",
@@ -62,7 +61,7 @@ public class CountryTimezone {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    protected CountryTimezone() {
+    protected CurrencyCountry() {
     }
 
     public Long getId() {
@@ -77,20 +76,12 @@ public class CountryTimezone {
         this.country = country;
     }
 
-    public Timezone getTimezone() {
-        return timezone;
+    public Currency getCurrency() {
+        return currency;
     }
 
-    public void setTimezone(Timezone timezone) {
-        this.timezone = timezone;
-    }
-
-    public Boolean getDefaultTimezone() {
-        return defaultTimezone;
-    }
-
-    public void setDefaultTimezone(Boolean defaultTimezone) {
-        this.defaultTimezone = defaultTimezone;
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     public LocalDateTime getCreatedDate() {

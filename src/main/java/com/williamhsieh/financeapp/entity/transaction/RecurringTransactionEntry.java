@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.williamhsieh.financeapp.entity.account.Account;
-import com.williamhsieh.financeapp.entity.Currency;
+import com.williamhsieh.financeapp.entity.currency.Currency;
 import com.williamhsieh.financeapp.entity.schedule.FlowFrequency;
 import com.williamhsieh.financeapp.entity.ledger.Ledger;
 

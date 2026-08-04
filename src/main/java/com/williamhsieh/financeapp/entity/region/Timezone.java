@@ -1,4 +1,4 @@
-package com.williamhsieh.financeapp.entity;
+package com.williamhsieh.financeapp.entity.region;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.Column;
@@ -9,26 +9,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "languages")
-public class Language {
-
+@Table(name = "timezones")
+public class Timezone {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(
-        name = "code",
-        nullable = false,
-        unique = true,
-        length = 50
-    )
+    @Column(name = "code", nullable = false, length = 50)
     private String code;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(
+        name = "iana_name",
+        nullable = false,
+        unique = true,
+        length = 100
+    )
+    private String ianaName;
+
+    @Column(name = "name", length = 100)
     private String name;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean active = true;
+    @Column(name = "utc_offset", nullable = false)
+    private Integer utcOffset;
+
+    @Column(name = "has_dst", nullable = false)
+    private Boolean hasDst = false;
+
+    @Column(name = "note", length = 255)
+    private String note;
 
     @Column(
         name = "created_date",
@@ -49,7 +58,7 @@ public class Language {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    protected Language() {
+    protected Timezone() {
     }
 
     public Long getId() {
@@ -64,6 +73,14 @@ public class Language {
         this.code = code;
     }
 
+    public String getIanaName() {
+        return ianaName;
+    }
+
+    public void setIanaName(String ianaName) {
+        this.ianaName = ianaName;
+    }
+
     public String getName() {
         return name;
     }
@@ -72,12 +89,28 @@ public class Language {
         this.name = name;
     }
 
-    public Boolean getActive() {
-        return active;
+    public Integer getUtcOffset() {
+        return utcOffset;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setUtcOffset(Integer utcOffset) {
+        this.utcOffset = utcOffset;
+    }
+
+    public Boolean getHasDst() {
+        return hasDst;
+    }
+
+    public void setHasDst(Boolean hasDst) {
+        this.hasDst = hasDst;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public LocalDateTime getCreatedDate() {

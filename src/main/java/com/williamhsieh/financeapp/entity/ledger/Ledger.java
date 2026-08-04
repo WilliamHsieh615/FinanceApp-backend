@@ -2,8 +2,8 @@ package com.williamhsieh.financeapp.entity.ledger;
 
 import java.time.LocalDateTime;
 
-import com.williamhsieh.financeapp.entity.Currency;
-import com.williamhsieh.financeapp.entity.User;
+import com.williamhsieh.financeapp.entity.currency.Currency;
+import com.williamhsieh.financeapp.entity.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
