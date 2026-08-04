@@ -151,7 +151,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (V1 DB)國別與時區關聯表
+    -- (V1 DB AP)國別與時區關聯表
     CREATE TABLE country_timezones (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,
@@ -192,7 +192,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (V1 DB)國別與貨幣關聯表
+    -- (V1 DB AP)國別與貨幣關聯表
     CREATE TABLE currency_countries (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,
@@ -218,7 +218,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (V1 DB)國別與語言關聯表
+    -- (V1 DB AP)國別與語言關聯表
     CREATE TABLE country_languages (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,
@@ -270,7 +270,7 @@
         FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)金融機構大類表
+    -- (V1 DB AP)金融機構大類表
     CREATE TABLE financial_institution_type_groups (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 代號 (BANK, BROKER, INSURANCE, EXCHANGE, CRYPTO)
@@ -282,7 +282,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (V1 DB)金融機構小類表
+    -- (V1 DB AP)金融機構小類表
     CREATE TABLE financial_institution_types (
         id                                  BIGINT         AUTO_INCREMENT PRIMARY KEY,
         financial_institution_type_group_id BIGINT         NOT NULL,
@@ -296,7 +296,7 @@
         FOREIGN KEY (financial_institution_type_group_id) REFERENCES financial_institution_type_groups(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)金融機構集團表
+    -- (V1 DB AP)金融機構集團表
     CREATE TABLE financial_institution_groups (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,                        -- 金融機構集團總部國
@@ -312,7 +312,7 @@
         FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)金融機構表
+    -- (V1 DB AP)金融機構表
     CREATE TABLE financial_institutions (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NOT NULL,                        -- 金融機構總部國
@@ -332,7 +332,7 @@
         FOREIGN KEY (financial_institution_group_id) REFERENCES financial_institution_groups(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (V1 DB)金融機構識別碼類型表
+    -- (DB)金融機構識別碼類型表
     CREATE TABLE financial_institution_identifier_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 代號 (SWIFT、BANK_CODE、TAX_ID、STOCK_CODE、ROUTING_NUMBER、IBAN_PREFIX、LICENSE_NO)
@@ -344,7 +344,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (V1 DB)金融機構識別碼表
+    -- (DB)金融機構識別碼表
     CREATE TABLE financial_institution_identifiers (
         id                                       BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                               BIGINT         NULL,
@@ -505,7 +505,7 @@
         FOREIGN KEY (language_id) REFERENCES languages(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)角色表
+    -- (V1 DB AP)角色表
     CREATE TABLE roles (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- ADMIN, STAFF, USER
@@ -517,7 +517,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (V1 DB)使用者與角色關聯表
+    -- (V1 DB AP)使用者與角色關聯表
     CREATE TABLE user_roles (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NOT NULL,
@@ -1485,7 +1485,7 @@
         FOREIGN KEY (fee_id) REFERENCES fees(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)銀行帳戶類型表
+    -- (V1 DB AP)銀行帳戶類型表
     CREATE TABLE bank_account_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1497,7 +1497,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- (V1 DB)帳戶表子表 (收支帳 → 銀行帳戶)
+    -- (V1 DB AP)帳戶表子表 (收支帳 → 銀行帳戶)
     CREATE TABLE bank_accounts (
         account_id                       BIGINT        PRIMARY KEY,
         financial_institution_id         BIGINT        NULL,
@@ -1514,7 +1514,7 @@
         FOREIGN KEY (payout_frequency_id) REFERENCES flow_frequencies(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
-    -- (V1 DB)支付網路類型表
+    -- (V1 DB AP)支付網路類型表
     CREATE TABLE payment_network_types (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1526,7 +1526,7 @@
         deleted_date                     DATETIME       NULL
     );
 
-    -- (V1 DB)支付網路表
+    -- (V1 DB AP)支付網路表
     CREATE TABLE payment_networks (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         country_id                       BIGINT         NULL,                            -- 母公司所在國（Amex=US, JCB=JP）
@@ -1542,7 +1542,7 @@
         FOREIGN KEY (payment_network_type_id) REFERENCES payment_network_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)卡片等級表
+    -- (V1 DB AP)卡片等級表
     CREATE TABLE card_tiers (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1554,7 +1554,7 @@
         deleted_date                     DATETIME       NULL
     );
 
-    -- (V1 DB)支付網路可支援的卡片等級表
+    -- (V1 DB AP)支付網路可支援的卡片等級表
     CREATE TABLE payment_network_card_tiers (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         payment_network_id               BIGINT         NOT NULL,
@@ -1571,7 +1571,7 @@
         FOREIGN KEY (card_tier_id) REFERENCES card_tiers(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)卡片能力表
+    -- (DB)卡片能力表
     CREATE TABLE card_capabilities (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         code                             VARCHAR(50)    NOT NULL UNIQUE,
@@ -1583,7 +1583,7 @@
         deleted_date                     DATETIME       NULL
     );
 
-    -- 帳戶表子表 (收支帳 → 銀行卡) 
+    -- (V1 DB AP)帳戶表子表 (收支帳 → 銀行卡) 
     CREATE TABLE bank_cards (
         account_id                       BIGINT         PRIMARY KEY,
         payment_network_card_tier_id     BIGINT         NULL,
@@ -1610,7 +1610,7 @@
         FOREIGN KEY (card_capability_id) REFERENCES card_capabilities(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- (V1 DB)帳戶表子表 (收支帳 → 信用卡)
+    -- (V1 DB AP)帳戶表子表 (收支帳 → 信用卡)
     CREATE TABLE credit_card_accounts (
         account_id                       BIGINT         PRIMARY KEY,
         financial_institution_id         BIGINT         NULL,
