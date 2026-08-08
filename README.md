@@ -496,7 +496,7 @@
 
         email_verified                   BOOLEAN        NOT NULL DEFAULT FALSE,          -- 電子郵件驗證
         sms_verified                     BOOLEAN        NOT NULL DEFAULT FALSE,          -- 簡訊驗證
-        is_active                        BOOLEAN        NOT NULL DEFAULT TRUE,           -- 是否啟用
+        is_active                        BOOLEAN        NOT NULL DEFAULT FALSE,           -- 是否啟用
         created_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         deleted_date                     DATETIME       NULL,                            -- 刪除時間 (由後端寫入)
