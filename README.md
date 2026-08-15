@@ -492,7 +492,7 @@
         email                            VARCHAR(255)   NOT NULL UNIQUE,                 -- 使用者電子郵件
         password                         VARCHAR(255)   NOT NULL,                        -- 使用者密碼 (後端使用hashcode寫入)
         birthday                         DATE           NOT NULL,                        -- 使用者生日
-        phone                            VARCHAR(20)    NULL,                            -- 手機號碼
+        phone                            VARCHAR(20)    NOT NULL,                        -- 手機號碼
 
         email_verified                   BOOLEAN        NOT NULL DEFAULT FALSE,          -- 電子郵件驗證
         sms_verified                     BOOLEAN        NOT NULL DEFAULT FALSE,          -- 簡訊驗證
