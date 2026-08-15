@@ -2673,7 +2673,7 @@
         FOREIGN KEY (entity_type_id) REFERENCES entity_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
-    -- 使用者電子信箱驗證表
+    -- (V1 DB AP)使用者電子信箱驗證表
     CREATE TABLE user_email_verifications (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NOT NULL,
@@ -2685,7 +2685,7 @@
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- 使用者簡訊驗證表
+    -- (V1 DB AP)使用者簡訊驗證表
     CREATE TABLE user_sms_verifications (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT         NOT NULL,
