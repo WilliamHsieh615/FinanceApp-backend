@@ -2673,6 +2673,31 @@
         FOREIGN KEY (entity_type_id) REFERENCES entity_types(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
+    -- 使用者電子信箱驗證表
+    CREATE TABLE user_email_verifications (
+        id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
+        user_id                          BIGINT         NOT NULL,
+        email                            VARCHAR(255)   NOT NULL,
+        token_hash                       CHAR(64)       NOT NULL UNIQUE,
+        expires_date                     DATETIME       NOT NULL,
+        verified_date                    DATETIME       NULL,
+        created_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+
+    -- 使用者簡訊驗證表
+    CREATE TABLE user_sms_verifications (
+        id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
+        user_id                          BIGINT         NOT NULL,
+        phone                            VARCHAR(20)    NOT NULL,
+        code_hash                        VARCHAR(255)   NOT NULL,
+        expires_date                     DATETIME       NOT NULL,
+        attempt_count                    INT            NOT NULL DEFAULT 0,
+        verified_date                    DATETIME       NULL,
+        created_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+
     -- 使用者登入狀態表
     CREATE TABLE user_login_statuses (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
