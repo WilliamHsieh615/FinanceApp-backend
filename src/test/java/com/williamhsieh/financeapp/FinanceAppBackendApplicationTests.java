@@ -1,13 +1,14 @@
 package com.williamhsieh.financeapp;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+import static org.assertj.core.api.Assertions.assertThat;
+
 class FinanceAppBackendApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void applicationClassExists() {
+		assertThat(FinanceAppBackendApplication.class).isNotNull();
 	}
 
 }

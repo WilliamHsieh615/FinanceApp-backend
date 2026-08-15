@@ -65,7 +65,7 @@ public class User {
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "phone", length = 20)
+    @Column(name = "phone", nullable = false, length = 20)
     private String phone;
 
     @Column(name = "email_verified", nullable = false)
@@ -75,7 +75,7 @@ public class User {
     private boolean smsVerified = false;
 
     @Column(name = "is_active", nullable = false)
-    private boolean active = true;
+    private boolean active = false;
 
     @Column(
         name = "created_date",
@@ -96,7 +96,7 @@ public class User {
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
-    protected User() {
+    public User() {
     }
 
     public Long getId() {
@@ -221,5 +221,9 @@ public class User {
 
     public void setDeletedDate(LocalDateTime deletedDate) {
         this.deletedDate = deletedDate;
+    }
+
+    public void refreshActiveStatus() {
+        this.active = this.emailVerified && this.smsVerified;
     }
 }
