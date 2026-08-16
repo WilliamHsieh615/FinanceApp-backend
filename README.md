@@ -2698,6 +2698,23 @@
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
+    -- (V1 DB AP)使用者換發登入權限表
+    CREATE TABLE user_refresh_tokens (
+        id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
+        user_id                          BIGINT         NOT NULL,
+
+        token_hash                       CHAR(64)       NOT NULL UNIQUE,
+        expires_date                     DATETIME       NOT NULL,
+        revoked_date                     DATETIME       NULL,
+        last_used_date                   DATETIME       NULL,
+        created_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+        INDEX idx_refresh_tokens_user (user_id),
+        INDEX idx_refresh_tokens_expires (expires_date),
+
+        CONSTRAINT fk_refresh_tokens_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    );
+
     -- 使用者登入狀態表
     CREATE TABLE user_login_statuses (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
