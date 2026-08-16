@@ -2733,28 +2733,34 @@
     CREATE TABLE user_login_logs (
         id                               BIGINT        AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT        NULL,
-        email                            VARCHAR(255)  NOT NULL,
         user_login_status_id             BIGINT        NOT NULL,
-        login_time                       DATETIME      NOT NULL,
+        refresh_token_id                 BIGINT        NULL,
+
+        email                            VARCHAR(255)  NOT NULL,
+        login_time                       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
         logout_time                      DATETIME      NULL,
+
         ip_address                       VARCHAR(45)   NULL,
         user_agent                       VARCHAR(500)  NULL,
         device_name                      VARCHAR(100)  NULL,
         os_name                          VARCHAR(50)   NULL,
         browser_name                     VARCHAR(50)   NULL,
+
         country_id                       BIGINT        NULL,
         city                             VARCHAR(100)  NULL,
-        session_id                       VARCHAR(100)  NULL,
-        refresh_token_id                 VARCHAR(100)  NULL,
 
-        INDEX(user_id, login_time),
-        INDEX(email),
-        INDEX(ip_address),
-        INDEX(user_login_status_id),
+        session_id                       CHAR(36)      NULL,
 
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-        FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE SET NULL ON UPDATE CASCADE,
-        FOREIGN KEY (user_login_status_id) REFERENCES user_login_statuses(id) ON DELETE RESTRICT ON UPDATE CASCADE
+        INDEX idx_login_logs_user_time (user_id, login_time),
+        INDEX idx_login_logs_email (email),
+        INDEX idx_login_logs_ip (ip_address),
+        INDEX idx_login_logs_status (user_login_status_id),
+        INDEX idx_login_logs_refresh_token (refresh_token_id),
+        UNIQUE KEY uk_login_logs_session (session_id),
+        CONSTRAINT fk_login_logs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+        CONSTRAINT fk_login_logs_country FOREIGN KEY (country_id) REFERENCES countries(id) ON DELETE SET NULL ON UPDATE CASCADE,
+        CONSTRAINT fk_login_logs_status FOREIGN KEY (user_login_status_id) REFERENCES user_login_statuses(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        CONSTRAINT fk_login_logs_refresh_token FOREIGN KEY (refresh_token_id) REFERENCES user_refresh_tokens(id) ON DELETE SET NULL ON UPDATE CASCADE
     );
 
 
