@@ -2715,12 +2715,49 @@
         CONSTRAINT fk_refresh_tokens_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
-    -- 使用者登入狀態表
+    -- (V1 DB AP)使用者授權事件類型表
+    CREATE TABLE user_auth_event_types (
+        id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
+        code                             VARCHAR(50)    NOT NULL UNIQUE,
+        name                             VARCHAR(100)   NOT NULL,
+        note                             VARCHAR(255)   NULL,
+        is_active                        BOOLEAN        NOT NULL DEFAULT TRUE,
+        created_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_date                     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        deleted_date                     DATETIME       NULL
+    );
+
+    -- (V1 DB AP)使用者授權事件歷程表
+    CREATE TABLE user_auth_event_logs (
+        id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
+        user_id                          BIGINT         NULL,
+        user_auth_event_type_id          BIGINT         NOT NULL,
+        refresh_token_id                 BIGINT         NULL,
+
+        is_success                       BOOLEAN        NOT NULL,
+        failure_detail                   VARCHAR(255)   NULL,
+        
+        email                            VARCHAR(255)   NULL,
+        session_id                       CHAR(36)       NULL,
+
+        ip_address                       VARCHAR(45)    NULL,
+        user_agent                       VARCHAR(500)   NULL,
+
+        event_time                       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+        INDEX idx_auth_events_user_time (user_id, event_time),
+        INDEX idx_auth_events_type_time (user_auth_event_type_id, event_time),
+        INDEX idx_auth_events_refresh_token ( refresh_token_id),
+        INDEX idx_auth_events_session (session_id),
+        CONSTRAINT fk_auth_events_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
+        CONSTRAINT fk_auth_events_type FOREIGN KEY (user_auth_event_type_id) REFERENCES user_auth_event_types(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+        CONSTRAINT fk_auth_events_refresh_token FOREIGN KEY (refresh_token_id) REFERENCES user_refresh_tokens(id) ON DELETE SET NULL ON UPDATE CASCADE
+    );
+
+    -- (V1 DB AP)使用者登入狀態表
     CREATE TABLE user_login_statuses (
         id                               BIGINT         AUTO_INCREMENT PRIMARY KEY,
-        code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 代碼（SUCCESS、INVALID_PASSWORD、USER_NOT_FOUND、ACCOUNT_LOCKED
-                                                                                                 ACCOUNT_DISABLED、EMAIL_NOT_VERIFIED、TOKEN_EXPIRED
-                                                                                                 REFRESH_TOKEN_EXPIRED、MFA_REQUIRED、MFA_FAILED、UNKNOWN_ERROR）
+        code                             VARCHAR(50)    NOT NULL UNIQUE,                 -- 代碼
         name                             VARCHAR(100)   NOT NULL,                        -- 名稱
         note                             VARCHAR(255),
         is_active                        BOOLEAN        NOT NULL DEFAULT TRUE,           -- 是否啟用
@@ -2729,7 +2766,7 @@
         deleted_date                     DATETIME       NULL                             -- 刪除時間 (由後端寫入)
     );
 
-    -- 使用者登入紀錄表
+    -- (V1 DB AP)使用者登入紀錄表
     CREATE TABLE user_login_logs (
         id                               BIGINT        AUTO_INCREMENT PRIMARY KEY,
         user_id                          BIGINT        NULL,
