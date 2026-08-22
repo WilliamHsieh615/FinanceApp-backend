@@ -42,7 +42,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public TokenRefreshResponse refresh(
-        @RequestBody RefreshTokenRequest request,
+        @Valid @RequestBody RefreshTokenRequest request,
         HttpServletRequest httpRequest
     ) {
         LoginRequestMetadata metadata =

@@ -7,12 +7,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.williamhsieh.financeapp.security.RestAuthenticationEntryPoint;
+import com.williamhsieh.financeapp.security.RestAccessDeniedHandler;
+
 @Configuration
 public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(
-        HttpSecurity http
+        HttpSecurity http,
+        RestAuthenticationEntryPoint authenticationEntryPoint,
+        RestAccessDeniedHandler accessDeniedHandler
     ) throws Exception {
         return http
             .csrf(csrf -> csrf.disable())
@@ -23,6 +28,16 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(
                     SessionCreationPolicy.STATELESS
                 )
+            )
+
+            .exceptionHandling(exception ->
+                exception
+                    .authenticationEntryPoint(
+                        authenticationEntryPoint
+                    )
+                    .accessDeniedHandler(
+                        accessDeniedHandler
+                    )
             )
 
             .authorizeHttpRequests(authorize ->
@@ -41,7 +56,11 @@ public class SecurityConfig {
             )
 
             .oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(Customizer.withDefaults())
+                oauth2
+                    .authenticationEntryPoint(
+                        authenticationEntryPoint
+                    )
+                    .jwt(Customizer.withDefaults())
             )
 
             .build();
