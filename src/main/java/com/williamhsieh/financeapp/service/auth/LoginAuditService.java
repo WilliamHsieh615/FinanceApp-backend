@@ -106,18 +106,25 @@ public class LoginAuditService {
     }
 
     @Transactional
-    public void recordLogout(Long refreshTokenId) {
+    public String recordLogout(Long refreshTokenId) {
         if (refreshTokenId == null) {
-            return;
+            return null;
         }
 
-        loginLogRepository
+        var loginLogOptional = loginLogRepository
             .findByRefreshToken_IdAndLogoutTimeIsNull(
                 refreshTokenId
-            )
-            .ifPresent(loginLog ->
-                loginLog.markAsLoggedOut()
             );
+
+        if (loginLogOptional.isEmpty()) {
+            return null;
+        }
+
+        UserLoginLog loginLog = loginLogOptional.get();
+
+        loginLog.markAsLoggedOut();
+
+        return loginLog.getSessionId();
     }
 
     private UserLoginStatus findStatus(String statusCode) {

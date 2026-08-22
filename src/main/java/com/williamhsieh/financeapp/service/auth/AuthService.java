@@ -225,17 +225,52 @@ public class AuthService {
         );
     }
     
-    public void logout(LogoutRequest request) {
+    public void logout(
+        LogoutRequest request,
+        LoginRequestMetadata metadata
+    ) {
         RefreshTokenRevocationResult result =
             refreshTokenService.revoke(
                 request.refreshToken()
             );
 
-        if (result.found()) {
-            loginAuditService.recordLogout(
-                result.refreshTokenId()
+        if (result.newlyRevoked()) {
+            String sessionId =
+                loginAuditService.recordLogout(
+                    result.refreshTokenId()
+                );
+
+            authEventAuditService.recordSuccess(
+                AuthEventCodes.LOGOUT_SUCCESS,
+                result.userId(),
+                result.refreshTokenId(),
+                result.email(),
+                sessionId,
+                metadata
             );
+
+            return;
         }
+
+        String failureDetail;
+
+        if (result.found()) {
+            failureDetail =
+                "登出使用的 Refresh Token 已經被撤銷";
+        } else {
+            failureDetail =
+                "找不到登出使用的 Refresh Token";
+        }
+
+        authEventAuditService.recordFailure(
+            AuthEventCodes.LOGOUT_INVALID_TOKEN,
+            result.userId(),
+            result.refreshTokenId(),
+            failureDetail,
+            result.email(),
+            null,
+            metadata
+        );
     }
 
     private ResponseStatusException invalidCredentials() {

@@ -183,16 +183,21 @@ public class RefreshTokenService {
         if (tokenOptional.isEmpty()) {
             return new RefreshTokenRevocationResult(
                 null,
+                null,
+                null,
                 false,
                 false
             );
         }
 
         UserRefreshToken token = tokenOptional.get();
+        User user = token.getUser();
 
         if (token.isRevoked()) {
             return new RefreshTokenRevocationResult(
                 token.getId(),
+                user.getId(),
+                user.getEmail(),
                 true,
                 false
             );
@@ -202,6 +207,8 @@ public class RefreshTokenService {
 
         return new RefreshTokenRevocationResult(
             token.getId(),
+            user.getId(),
+            user.getEmail(),
             true,
             true
         );
